@@ -1,42 +1,33 @@
 import React, { useState, useEffect } from 'react'
 import { Button } from 'evergreen-ui'
+import { useWeb3React } from "@web3-react/core"
+import { injected } from "./Connectors"
 
 function truncateAddress (address) {
   return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`
 }
 
-function isMetaMask () { return window.ethereum?.isMetaMask }
-
 function ConnectToWalletButton (props) {
-  const [address, setAddress] = useState(window.ethereum?.selectedAddress)
-  const [loading, setLoading] = useState(false)
 
-  useEffect(() => {
-    const firstAddress = (addr) => setAddress(addr[0])
-    window.ethereum?.on('accountsChanged', firstAddress)
+  const {active, account, library, connector, activate, deactivate } = useWeb3React()
 
-    return function cleanup () {
-      window.ethereum?.removeListener('accountsChanged', firstAddress)
+  async function connect() {
+    try {
+      if (!active) {
+        await activate(injected);
+      }
+    } catch (ex) {
+      console.log(ex)
     }
-  }, [])
-
-  async function connectWallet (event) {
-    setLoading(true)
-
-    window.ethereum?.request({ method: 'eth_requestAccounts' })
-      .catch(console.error)
-      .finally(() => setLoading(false))
   }
 
-  if (!isMetaMask()) return null
   return (
     <Button
-      intent={address ? 'success' : 'none'}
+      intent={account ? 'success' : 'none'}
       style={props.style}
-      isLoading={loading}
-      onClick={connectWallet}
+      onClick={connect}
     >
-      {address ? truncateAddress(address) : 'Connect wallet'}
+      {account ? truncateAddress(account) : 'Connect wallet'}
     </Button>
   )
 }

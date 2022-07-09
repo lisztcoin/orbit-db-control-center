@@ -11,6 +11,15 @@ import DatabaseView from './views/Database'
 import DatabasesView from './views/Databases'
 import SearchResultsView from './views/SearchResults'
 
+import { Web3ReactProvider } from '@web3-react/core'
+import { Web3Provider } from '@ethersproject/providers'
+
+function getLibrary(provider) {
+  const library = new Web3Provider(provider)
+  library.pollingInterval = 12000
+  return library
+}
+
 function App () {
   const initialState = {
     user: null,
@@ -92,23 +101,31 @@ function App () {
   }
 
   return (
-    <StateProvider initialState={initialState} reducer={reducer}>
-      <Pane background='tint1' height='100%'>
-        <Header />
-        <Systems />
-        <Switch>
-          <Route path='/search'>
-            <SearchResultsView />
-          </Route>
-          <Route path='/orbitdb/:programName/:dbName'>
-            <DatabaseView />
-          </Route>
-          <Route path='/'>
-            <DatabasesView />
-          </Route>
-        </Switch>
-      </Pane>
-    </StateProvider>
+    <Web3ReactProvider getLibrary={getLibrary}>
+      <StateProvider initialState={initialState} reducer={reducer}>
+        <Pane background='tint1' height='100%'>
+          <Header />
+          <Systems />
+          <Switch>
+            <Route path='/search'>
+              <SearchResultsView />
+            </Route>
+            <Route path='/orbitdb/:programName/:dbName'>
+              <DatabaseView />
+            </Route>
+            <Route path='/secret'>
+              <DatabasesView />
+            </Route>
+            <Route path='/report'>
+              <DatabasesView />
+            </Route>
+            <Route path='/rewards'>
+              <DatabasesView />
+            </Route>
+          </Switch>
+        </Pane>
+      </StateProvider>
+    </Web3ReactProvider>
   )
 }
 

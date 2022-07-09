@@ -35,25 +35,11 @@ function Header () {
             flexDirection='row' 
             alignItems='center'
           >
-            <img alt="" src='Orbit_round-02.png' width={majorScale(5)}/>
+            <img alt="" src='Tree.png' width={majorScale(5)}/>
             <Heading size={800} fontFamily='Titillium Web' marginX={majorScale(2)}>
-            CONTROL CENTER
+            Carbon Rewards
             </Heading>
           </Link>
-        </Pane>
-        <Pane
-          className='align search'
-          display='flex'
-          alignItems='center'
-          justifyContent='center'
-        >
-          <SearchInput
-            width='100%'
-            flex='1 1 100%'
-            placeholder='Search...'
-            height={24}
-            onKeyUp={handleKeyUp}
-          />
         </Pane>
       </Pane>
     </Pane>
