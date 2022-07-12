@@ -13,6 +13,7 @@ import SearchResultsView from './views/SearchResults'
 
 import { Web3ReactProvider } from '@web3-react/core'
 import { Web3Provider } from '@ethersproject/providers'
+import Questions from './views/Questions'
 
 function getLibrary(provider) {
   const library = new Web3Provider(provider)
@@ -117,7 +118,7 @@ function App () {
               <DatabasesView />
             </Route>
             <Route path='/report'>
-              <DatabasesView />
+              <Questions />
             </Route>
             <Route path='/rewards'>
               <DatabasesView />
