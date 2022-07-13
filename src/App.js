@@ -14,6 +14,7 @@ import SearchResultsView from './views/SearchResults'
 import { Web3ReactProvider } from '@web3-react/core'
 import { Web3Provider } from '@ethersproject/providers'
 import Questions from './views/Questions'
+import MintControl from './views/MintControl'
 
 function getLibrary(provider) {
   const library = new Web3Provider(provider)
@@ -116,6 +117,9 @@ function App () {
             </Route>
             <Route path='/secret'>
               <DatabasesView />
+            </Route>
+            <Route path='/mintcontrol'>
+              <MintControl />
             </Route>
             <Route path='/report'>
               <Questions />
