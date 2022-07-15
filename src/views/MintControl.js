@@ -25,6 +25,7 @@ function MintControl () {
     const [loading, setLoading] = React.useState(false)
     const [alreadyEntered, setAlreadyEntered] = React.useState(false)
     const [appState, dispatch] = useStateValue()
+    const [tokenId, setTokenId] = React.useState(-1)
     const {active, account, library, chainId, connector, activate, deactivate } = useWeb3React()
 
     const fetchDB = async () => {
@@ -44,6 +45,17 @@ function MintControl () {
 
       const mintForWinner = async () => {
         const storage = new NFTStorage({ endpoint, token })
+        const carbon_contract = new Contract(CARBONNFT_CONTRACT, carbon_abi, library.getSigner(account));
+
+        carbon_contract.tokenId().then(
+            (id) => {
+                setTokenId(id.toNumber());
+                console.log("token" + id);
+            }
+        ).catch(
+            () => {console.log("error!");}
+        )        
+
         // Upload NFT image using NFTStorage
         // Because we are using the same picture for simplicity, below code is commented out.
         // const data = await fs.promises.readFile('Tree.png')
@@ -57,7 +69,7 @@ function MintControl () {
           "external_url": "https://www.carbonnft.art/",
           "image": image_url,
           "description": "CarbonNFT is a reward NFT for people who log their carbon footprint.",
-          "name": "Carbon NFT #3"
+          "name": "Carbon NFT #" + tokenId
         }
         const blob = new Blob([JSON.stringify(metadata, null, 2)], {type : 'application/json'});
         const metadata_cid = await storage.storeBlob(blob)
@@ -66,7 +78,6 @@ function MintControl () {
         console.log(status)
 
         const uri = "https://" + metadata_cid + ".ipfs.nftstorage.link/"
-        const carbon_contract = new Contract(CARBONNFT_CONTRACT, carbon_abi, library.getSigner(account));
 
         var participants = []
         appState.entries.map((e, idx) => {

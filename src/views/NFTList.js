@@ -21,7 +21,6 @@ import carbon_abi from '../abi/carbonnft.json'
 
 function NFTList () {
     const [loading, setLoading] = React.useState(false)
-    const [alreadyEntered, setAlreadyEntered] = React.useState(false)
     const [appState, dispatch] = useStateValue()
     const {active, account, library, connector, activate, deactivate } = useWeb3React()
     const [nftList, setNftList] = useState([])
@@ -51,7 +50,7 @@ function NFTList () {
             }
         }
         console.log(nftList);
-    }, [account, library])
+    }, [account, library, nftList])
 
     return (
         <>
