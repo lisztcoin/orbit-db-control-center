@@ -12,17 +12,17 @@ import {
 import { getDB } from '../database'
 import { useStateValue, actions } from '../state'
 import { useWeb3React } from '@web3-react/core'
+import { ORBIT_DB_ADDRESS } from '../config/constants'
 
 function Questions () {
     const [loading, setLoading] = React.useState(false)
     const [alreadyEntered, setAlreadyEntered] = React.useState(false)
     const [appState, dispatch] = useStateValue()
-    const address = "/orbitdb/zdpuAxtE942sV37eizsbBhd8UpmfbNyBjVYWrRPL1jbgqqzzG/kv"
     const {active, account, library, connector, activate, deactivate } = useWeb3React()
 
-    const fetchDB = async (address) => {
+    const fetchDB = async () => {
         setLoading(true)
-        const db = await getDB(address)
+        const db = await getDB(ORBIT_DB_ADDRESS)
     
         if (db) {
           let entries = Object.keys(db.all).map(e => ({ payload: { value: {key: e, value: db.get(e)} } }))
@@ -49,8 +49,8 @@ function Questions () {
       }
     
       useEffect(() => {
-        fetchDB(address)
-        const program = appState.programs.find(p => p.payload.value.address === address)
+        fetchDB(ORBIT_DB_ADDRESS)
+        const program = appState.programs.find(p => p.payload.value.address === ORBIT_DB_ADDRESS)
         dispatch({ type: actions.PROGRAMS.SET_PROGRAM, program })
       }, [dispatch, appState.programs]) // eslint-disable-line
 
@@ -94,7 +94,7 @@ function Questions () {
           marginX={majorScale(6)}
           marginTop={majorScale(2)}
           marginBottom={majorScale(1)}
-        > {alreadyEntered ? (<Text> You've already reported today. Please wait for the draw. Also don't forget to report tomorrow.</Text>) : (
+        > {alreadyEntered ? (<Text> Thanks for reporting! Please wait for the draw. Also don't forget to report tomorrow.</Text>) : (
             <>
             <Checkbox checked={checked1} onChange={e => setChecked1(e.target.checked)} label="I rode public transportation" />
             <Checkbox checked={checked2} onChange={e => setChecked2(e.target.checked)} label="I recycled something" />

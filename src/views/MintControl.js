@@ -14,6 +14,7 @@ import { getDB } from '../database'
 import { useStateValue, actions } from '../state'
 import { useWeb3React } from '@web3-react/core'
 import carbon_abi from '../abi/carbonnft.json'
+import { CARBONNFT_CONTRACT, ORBIT_DB_ADDRESS } from '../config/constants';
 import fs from 'fs'
 import { NFTStorage, Blob } from 'nft.storage'
 
@@ -24,12 +25,11 @@ function MintControl () {
     const [loading, setLoading] = React.useState(false)
     const [alreadyEntered, setAlreadyEntered] = React.useState(false)
     const [appState, dispatch] = useStateValue()
-    const address = "/orbitdb/zdpuAxtE942sV37eizsbBhd8UpmfbNyBjVYWrRPL1jbgqqzzG/kv"
-    const {active, account, library, connector, activate, deactivate } = useWeb3React()
+    const {active, account, library, chainId, connector, activate, deactivate } = useWeb3React()
 
-    const fetchDB = async (address) => {
+    const fetchDB = async () => {
         setLoading(true)
-        const db = await getDB(address)
+        const db = await getDB(ORBIT_DB_ADDRESS)
     
         if (db) {
           let entries = Object.keys(db.all).map(e => ({ payload: { value: {key: e, value: db.get(e)} } }))
@@ -66,8 +66,7 @@ function MintControl () {
         console.log(status)
 
         const uri = "https://" + metadata_cid + ".ipfs.nftstorage.link/"
-        const contract_address = "0xA5aE829B7dE6B0b3291C1fBe6A2DAce2d8044D1e"
-        const carbon_contract = new Contract(contract_address, carbon_abi, library.getSigner(account));
+        const carbon_contract = new Contract(CARBONNFT_CONTRACT, carbon_abi, library.getSigner(account));
 
         var participants = []
         appState.entries.map((e, idx) => {
@@ -75,7 +74,10 @@ function MintControl () {
                 participants.push(e.payload.value.key)
             }
         });
-        
+        console.log("params")
+        console.log(appState.entries)
+        console.log(participants)
+        console.log(uri)
         carbon_contract.mint(participants, uri).then(
             () => {console.log("minted!");}
         ).catch(
@@ -89,23 +91,11 @@ function MintControl () {
         const entries = Object.keys(db.all).map(e => ({ payload: { value: {key: e, value: db.get(e)} } }))
         dispatch({ type: actions.DB.SET_DB, db, entries })
       }
-
-      const addToDB = async () => {
-        const db = appState.db
-    
-        if (db.type !== 'keyvalue') {
-          throw new Error('This component can only handle Key-Value databases')
-        }
-    
-        await db.set(account, Date.now())
-    
-        const entries = Object.keys(db.all).map(e => ({ payload: { value: {key: e, value: db.get(e)} } }))
-        dispatch({ type: actions.DB.SET_DB, db, entries })
-      }
     
       useEffect(() => {
-        fetchDB(address)
-        const program = appState.programs.find(p => p.payload.value.address === address)
+        console.log(chainId)
+        fetchDB(ORBIT_DB_ADDRESS)
+        const program = appState.programs.find(p => p.payload.value.address === ORBIT_DB_ADDRESS)
         dispatch({ type: actions.PROGRAMS.SET_PROGRAM, program })
       }, [dispatch, appState.programs]) // eslint-disable-line
 

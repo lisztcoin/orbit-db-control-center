@@ -15,6 +15,7 @@ import { Web3ReactProvider } from '@web3-react/core'
 import { Web3Provider } from '@ethersproject/providers'
 import Questions from './views/Questions'
 import MintControl from './views/MintControl'
+import NFTList from './views/NFTList'
 
 function getLibrary(provider) {
   const library = new Web3Provider(provider)
@@ -125,7 +126,7 @@ function App () {
               <Questions />
             </Route>
             <Route path='/rewards'>
-              <DatabasesView />
+              <NFTList />
             </Route>
           </Switch>
         </Pane>
