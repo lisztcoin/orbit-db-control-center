@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { Button } from 'evergreen-ui'
 import { useWeb3React } from "@web3-react/core"
-import { injected } from "./Connectors"
+import { injected } from "../state/Connectors"
+import {useEagerConnect} from "../state/web3"
 
 function truncateAddress (address) {
   return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`
@@ -10,6 +11,7 @@ function truncateAddress (address) {
 function ConnectToWalletButton (props) {
 
   const {active, account, library, connector, activate, deactivate } = useWeb3React()
+  const triedEager = useEagerConnect()
 
   async function connect() {
     try {

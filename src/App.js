@@ -9,7 +9,6 @@ import Header from './components/Header'
 
 import DatabaseView from './views/Database'
 import DatabasesView from './views/Databases'
-import SearchResultsView from './views/SearchResults'
 
 import { Web3ReactProvider } from '@web3-react/core'
 import { Web3Provider } from '@ethersproject/providers'
@@ -110,9 +109,6 @@ function App () {
           <Header />
           <Systems />
           <Switch>
-            <Route path='/search'>
-              <SearchResultsView />
-            </Route>
             <Route path='/orbitdb/:programName/:dbName'>
               <DatabaseView />
             </Route>

@@ -43,14 +43,13 @@ function NFTList () {
                     console.log("error retrieving carbon NFT")
                 }
             );
-            // TODO: fix
             return () => {
                 stale = true
                 // do nothing.
             }
         }
         console.log(nftList);
-    }, [account, library, nftList])
+    }, [account, library])
 
     return (
         <>
